@@ -1,0 +1,23 @@
+# Core dependencies
+numpy>=1.24.0
+pandas>=2.0.0
+tqdm>=4.65.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# OCR dependencies
+pytesseract>=0.3.10
+Pillow>=10.0.0  # PIL/Image processing
+google-cloud-vision>=3.4.4
+google-auth>=2.22.0  # For Google Cloud authentication
+
+# Object Detection dependencies
+ultralytics>=8.0.0  # For YOLO
+opencv-python>=4.8.0  # cv2
+torch>=2.0.0  # Required by ultralytics
+torchvision>=0.15.0  # Required by ultralytics
+
+# Utility dependencies
+python-Levenshtein>=0.21.0  # For Levenshtein distance calculation 
