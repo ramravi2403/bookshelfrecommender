@@ -25,19 +25,8 @@ class GoogleVisionOCR(OCRModel):
             self.client = vision.ImageAnnotatorClient()
 
     def detect_text_from_array(self, image_array: np.ndarray) -> str:
-        """
-        Detect text from a numpy array (OpenCV image)
-
-        Args:
-            image_array: numpy array containing the image (BGR format from OpenCV)
-        Returns:
-            str: Detected text, normalized
-        """
         try:
-            # Convert BGR to RGB
             rgb_image = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
-
-            # Encode image to bytes
             success, encoded_image = cv2.imencode('.png', rgb_image)
             if not success:
                 raise ValueError("Failed to encode image")
@@ -50,14 +39,7 @@ class GoogleVisionOCR(OCRModel):
             return ""
 
     def _process_vision_request(self, image: vision.Image) -> str:
-        """
-        Process the vision request and return normalized text
 
-        Args:
-            image: Google Vision Image object
-        Returns:
-            str: Normalized detected text
-        """
         response = self.client.text_detection(image=image)
         texts = response.text_annotations
 
@@ -78,7 +60,7 @@ class GoogleVisionOCR(OCRModel):
             with io.open(image_path, 'rb') as image_file:
                 content = image_file.read()
             image = vision.Image(content=content)
-            response = self.client.text_detection(image=image)
+            response = self.client._process_vision_request(image=image)
             texts = response.text_annotations
             if texts:
                 raw_text = texts[0].description

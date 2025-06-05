@@ -11,7 +11,7 @@ class BookProcessingFactory:
     @staticmethod
     def create_processing_service(
             model_name: str = "gemini-2.0-flash",
-            prompt_template_path: str = "parser_prompt.md",
+            prompt_template_path: str = "ocr_parser/parser_prompt.md",
             cache_file: str = None,
             batch_size: int = 10,
             batch_delay: float = 5.0

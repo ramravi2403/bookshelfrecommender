@@ -1,5 +1,5 @@
 from langchain_core.prompts import PromptTemplate
-from ModelFactory import ModelFactory
+from .ModelFactory import ModelFactory
 from ocr_parser.interfaces import ILanguageModel
 from dotenv import load_dotenv
 
