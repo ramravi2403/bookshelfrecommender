@@ -6,7 +6,7 @@ class YoloModel:
         self.__model = YOLO(model_path)
 
     def predict(self, path, save:bool=True, show:bool=False):
-        return self.__model(path, save=save, Show=show)
+        return self.__model.predict(path, save=save, show=show)
 
     def get_model(self):
         return self.__model

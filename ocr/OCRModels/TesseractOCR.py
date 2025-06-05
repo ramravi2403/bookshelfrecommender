@@ -1,4 +1,4 @@
-from OCRModels.OCRModel import OCRModel
+from ocr.OCRModels.OCRModel import OCRModel
 import pytesseract
 from PIL import Image
 

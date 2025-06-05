@@ -1,2 +1,4 @@
 /.venv/
 /ocr/evaluation_results/
+/ocr_parser/processed_books_dataset.csv
+/ocr_parser/gemini_2_0_flash_book_cache.json

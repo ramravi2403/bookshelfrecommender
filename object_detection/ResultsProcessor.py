@@ -1,3 +1,6 @@
+import os
+from typing import Optional, List
+
 import numpy as np
 import cv2
 class ResultsProcessor:
@@ -11,6 +14,79 @@ class ResultsProcessor:
             boxes.append((class_id, corners))
 
         return boxes
+
+    def save_book_spines(self, image_path: str, yolo_results, output_dir: str) -> List[Optional[str]]:
+        """
+        Extract and save book spines to the specified directory
+
+        Args:
+            image_path: Path to the original image
+            yolo_results: Results from YOLO model prediction
+            output_dir: Directory to save the cropped images
+
+        Returns:
+            List of paths to saved spine images (None for failed crops)
+        """
+        # Get bounding boxes
+        boxes = self.read_yolo_obb_labels(yolo_results)
+        if not boxes:
+            print("No bounding boxes found.")
+            return []
+
+        # Read original image
+        image = cv2.imread(image_path)
+        if image is None:
+            raise FileNotFoundError(f"Could not read image: {image_path}")
+
+        # Extract and save each book spine
+        saved_files = []
+        for idx, (class_id, corners) in enumerate(boxes):
+            corners_px = np.array(corners, dtype=np.float32)
+            cropped = self.__crop_and_rotate_obb(image, corners_px)
+
+            if cropped is not None and cropped.size > 0:
+                output_path = os.path.join(output_dir, f"book_{idx}.jpg")
+                cv2.imwrite(output_path, cropped)
+                saved_files.append(output_path)
+            else:
+                saved_files.append(None)
+
+        return saved_files
+
+    def extract_book_spines(self, image_path: str, yolo_results) -> List[Optional[np.ndarray]]:
+        """
+        Extract all book spines from an image as numpy arrays
+
+        Args:
+            image_path: Path to the original image
+            yolo_results: Results from YOLO model prediction
+
+        Returns:
+            List of numpy arrays, each containing a cropped book spine image
+        """
+        # Get bounding boxes
+        boxes = self.read_yolo_obb_labels(yolo_results)
+        if not boxes:
+            print("No bounding boxes found.")
+            return []
+
+        # Read original image
+        image = cv2.imread(image_path)
+        if image is None:
+            raise FileNotFoundError(f"Could not read image: {image_path}")
+
+        # Extract each book spine
+        cropped_images = []
+        for class_id, corners in boxes:
+            corners_px = np.array(corners, dtype=np.float32)
+            cropped = self.__crop_and_rotate_obb(image, corners_px)
+
+            if cropped is not None and cropped.size > 0:
+                cropped_images.append(cropped)
+            else:
+                cropped_images.append(None)
+
+        return cropped_images
 
     def __order_corners(self, corners):
         """
