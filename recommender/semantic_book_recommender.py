@@ -24,7 +24,11 @@ class SemanticBookRecommender:
 
     def load_and_preprocess_data(self, filepath: str) -> None:
         self.books_df = pd.read_csv(filepath)
-        self.books_df = self.books_df.dropna(subset=['Description']).reset_index(drop=True)
+        self.books_df = self.books_df.dropna(subset=['Description'])
+        self.books_df['Author'] = self.books_df['Author'].str.strip()
+        self.books_df['Title'] = self.books_df['Title'].str.strip()
+        self.books_df = self.books_df.drop_duplicates(subset=['Author', 'Title'])
+        self.books_df = self.books_df.reset_index(drop=True)
         self.books_df['Emotion'] = self.books_df['Description'].apply(self.predict_emotion)
         self.books_df['Genres'] = self.books_df['Genres'].fillna('Unknown')
         self._create_embeddings()
